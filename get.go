@@ -69,3 +69,49 @@ L:
 
 	return
 }
+
+// GetXYs クリック座標を指定回数分取得し返す
+func GetXYs(n, timelimit int) (xs, ys []float64) {
+	evChan := hook.Start()
+	hook.Register(hook.MouseDown, []string{"w"}, func(e hook.Event) {
+		fmt.Println("click")
+	})
+	defer hook.End()
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timelimit)*time.Second)
+	defer cancel()
+
+	time.Sleep(time.Second)
+	fmt.Println(STARTWORD)
+
+L:
+	for ev := range evChan {
+		select {
+		case <-ctx.Done():
+			break L
+
+		default:
+			if !(ev.Kind == hook.MouseUp) {
+				continue
+			}
+
+			if len(xs) >= n || len(ys) >= n {
+				break L
+			} else if len(xs) != len(ys) {
+				break L
+			}
+
+			xs = append(xs, float64(ev.X))
+			ys = append(ys, float64(ev.Y))
+		}
+	}
+
+	// check length
+	if len(xs) > len(ys) {
+		xs = xs[:len(ys)]
+	} else if len(ys) > len(xs) {
+		ys = ys[:len(xs)]
+	}
+
+	return
+}

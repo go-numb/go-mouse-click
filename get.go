@@ -169,3 +169,39 @@ func (c *Corners) _done() bool {
 
 	return false
 }
+
+func (c *Corners) MinX() int {
+	if c.X1 > c.X2 {
+		return c.X2
+	} else if c.X1 == c.X2 {
+		return c.X1
+	}
+	return c.X1
+}
+
+func (c *Corners) MinY() int {
+	if c.Y1 > c.Y2 {
+		return c.Y2
+	} else if c.Y1 == c.Y2 {
+		return c.Y1
+	}
+	return c.Y1
+}
+
+func (c *Corners) MaxX() int {
+	if c.X1 > c.X2 {
+		return c.X1
+	} else if c.X1 == c.X2 {
+		return c.X1
+	}
+	return c.X2
+}
+
+func (c *Corners) MaxY() int {
+	if c.Y1 > c.Y2 {
+		return c.Y1
+	} else if c.Y1 == c.Y2 {
+		return c.Y1
+	}
+	return c.Y2
+}

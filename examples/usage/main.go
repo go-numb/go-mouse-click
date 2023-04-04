@@ -34,6 +34,6 @@ func __main() {
 
 func main() {
 	c := mouse.GetFourCorners()
-	fmt.Println(c.X1, c.Y1)
-	fmt.Println(c.X2, c.Y2)
+	fmt.Println("start: ", c.X1, c.Y1)
+	fmt.Println("end: ", c.X2, c.Y2)
 }

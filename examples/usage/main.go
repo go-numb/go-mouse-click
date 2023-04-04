@@ -21,7 +21,7 @@ func _main() {
 	mouse.Click(x, y, 1)
 }
 
-func main() {
+func __main() {
 	x, y := mouse.GetXYs(10, 20)
 
 	fmt.Println("取得完了")
@@ -30,4 +30,10 @@ func main() {
 	fmt.Println(len(x), len(y), "gets")
 	fmt.Printf("%v\n", x)
 	fmt.Printf("%v\n", y)
+}
+
+func main() {
+	c := mouse.GetFourCorners()
+	fmt.Println(c.X1, c.Y1)
+	fmt.Println(c.X2, c.Y2)
 }

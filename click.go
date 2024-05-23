@@ -1,7 +1,7 @@
 package mouse
 
 import (
-	"fmt"
+	"log"
 	"math/rand"
 	"time"
 
@@ -11,7 +11,9 @@ import (
 // Click around x and y, var around is determined by random.
 func Click(x, y, around int) {
 	start := time.Now()
-	defer fmt.Println(time.Since(start))
+	defer func() {
+		log.Default().Println("Click() elapsed time: ", time.Since(start))
+	}()
 
 	s := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(s)
@@ -24,7 +26,7 @@ func Click(x, y, around int) {
 		y += r.Intn(around)
 	}
 
-	fmt.Printf("ランダム加算後座標 x: %d, y: %d\n", x, y)
+	log.Printf("ランダム加算後座標 x: %d, y: %d\n", x, y)
 
 	robotgo.Move(x, y)
 	robotgo.Click()

@@ -3,9 +3,9 @@ package mouse
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
-	"github.com/go-vgo/robotgo"
 	hook "github.com/robotn/gohook"
 	"gonum.org/v1/gonum/stat"
 )
@@ -25,7 +25,7 @@ func Setting() (x, y int) {
 
 	evChan := hook.Start()
 	hook.Register(hook.MouseDown, []string{"w"}, func(e hook.Event) {
-		fmt.Println("click")
+		log.Println("click")
 	})
 	defer hook.End()
 
@@ -35,13 +35,13 @@ func Setting() (x, y int) {
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
 
-	fmt.Println(WAITWORD)
+	log.Println(WAITWORD)
 	for i := 0; i < 5; i++ {
 		fmt.Printf("%d\n", i+1)
 		time.Sleep(time.Second)
 	}
 
-	fmt.Println(STARTWORD)
+	log.Println(STARTWORD)
 
 L:
 	for ev := range evChan {
@@ -52,10 +52,10 @@ L:
 			x = int(stat.Mean(xs, nil))
 			y = int(stat.Mean(ys, nil))
 			if x < 0 || y < 0 {
-				fmt.Println(FALSE)
+				log.Println(FALSE)
 				continue
 			}
-			fmt.Println(x, y)
+			log.Println(x, y)
 
 		default:
 			if ev.Kind == hook.MouseUp || ev.Kind == hook.MouseDown {
@@ -75,7 +75,7 @@ L:
 func GetXYs(n, timelimit int) (xs, ys []float64) {
 	evChan := hook.Start()
 	hook.Register(hook.MouseDown, []string{"w"}, func(e hook.Event) {
-		fmt.Println("click")
+		log.Println("click")
 	})
 	defer hook.End()
 
@@ -83,7 +83,7 @@ func GetXYs(n, timelimit int) (xs, ys []float64) {
 	defer cancel()
 
 	time.Sleep(time.Second)
-	fmt.Println(STARTWORD)
+	log.Println(STARTWORD)
 
 L:
 	for ev := range evChan {
@@ -95,6 +95,9 @@ L:
 			if !(ev.Kind == hook.MouseUp) {
 				continue
 			}
+
+			log.Printf("link: %d, %d, %d", ev.Kind, ev.X, ev.Y)
+			log.Printf("len: %d, %d", len(xs), len(ys))
 
 			if len(xs) >= n || len(ys) >= n {
 				break L
@@ -129,14 +132,14 @@ type Corners struct {
 func GetFourCorners() *Corners {
 	evChan := hook.Start()
 	hook.Register(hook.MouseDown, []string{"w"}, func(e hook.Event) {
-		fmt.Println("click")
+		log.Println("click")
 	})
 	defer hook.End()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	fmt.Println(STARTWORD)
+	log.Println(STARTWORD)
 
 	c := new(Corners)
 
@@ -148,9 +151,9 @@ L:
 
 		default:
 			if ev.Kind == hook.MouseHold {
-				c.X1, c.Y1 = robotgo.GetMousePos()
+				c.X1, c.Y1 = int(ev.X), int(ev.Y)
 			} else if ev.Kind == hook.MouseDown {
-				c.X2, c.Y2 = robotgo.GetMousePos()
+				c.X2, c.Y2 = int(ev.X), int(ev.Y)
 			}
 
 			if c._done() {
